@@ -1,5 +1,5 @@
-use tokio::io::{Serialize};
-use tokio::proto::pipeline::Frame;
+use tokio_proto::io::{Serialize};
+use tokio_proto::proto::pipeline::Frame;
 use bytes::{MutBuf, BlockBuf, Fmt};
 use std::io;
 use std::fmt::{Write};

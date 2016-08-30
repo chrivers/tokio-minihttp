@@ -1,7 +1,7 @@
 #![allow(dead_code, unused_variables)]
 
-use tokio::io::{Parse};
-use tokio::proto::pipeline::Frame;
+use tokio_proto::io::{Parse};
+use tokio_proto::proto::pipeline::Frame;
 use bytes::{Bytes, BlockBuf};
 use std::{io, slice, str};
 

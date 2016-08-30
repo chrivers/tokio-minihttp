@@ -1,5 +1,5 @@
-extern crate tokio;
-extern crate tokio_ssl;
+extern crate tokio_proto;
+extern crate tokio_tls;
 extern crate futures;
 extern crate bytes;
 extern crate time;
@@ -14,11 +14,11 @@ pub use request::Request;
 pub use response::Response;
 pub use ssl::NewSslContext;
 
-use tokio::{server, Service, NewService};
-use tokio::io::Framed;
-use tokio::proto::pipeline;
-use tokio::reactor::Reactor;
-use tokio::util::future::Empty;
+use tokio_proto::{server, Service, NewService};
+use tokio_proto::io::Framed;
+use tokio_proto::proto::pipeline;
+use tokio_core::Reactor;
+use tokio_proto::util::future::Empty;
 use futures::{Future, Map};
 use bytes::BlockBuf;
 use std::io;

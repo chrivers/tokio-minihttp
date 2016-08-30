@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["Carl Lerche <me@carllerche.com>"]
 
 [dependencies]
-tokio = { git = "https://github.com/tokio-rs/tokio" }
-tokio-ssl = { git = "https://github.com/tokio-rs/tokio-ssl" }
+tokio-proto = { git = "https://github.com/tokio-rs/tokio-proto" }
+tokio-tls = { git = "https://github.com/tokio-rs/tokio-tls" }
 bytes = { git = "https://github.com/carllerche/bytes" }
 futures = "0.1.0"
 httparse = "1.1.2"

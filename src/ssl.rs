@@ -1,5 +1,5 @@
-use tokio::io::{Stream, Readiness};
-use tokio_ssl::{SslStream, ServerContext};
+use tokio_proto::io::{Stream, Readiness};
+use tokio_tls::{TlsStream, ServerContext};
 use std::{io, mem};
 
 pub trait NewSslContext: Send + 'static {
@@ -8,7 +8,7 @@ pub trait NewSslContext: Send + 'static {
 
 // TODO: Figure out how to build stacks better
 pub enum MaybeSsl<S> {
-    Ssl(SslStream<S>),
+    Ssl(TlsStream<S>),
     NoSsl(S),
     Invalid,
 }
