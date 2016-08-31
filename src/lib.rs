@@ -1,3 +1,4 @@
+extern crate tokio_core;
 extern crate tokio_proto;
 extern crate tokio_tls;
 extern crate futures;
@@ -17,9 +18,8 @@ pub use ssl::NewSslContext;
 use tokio_proto::{server, Service, NewService};
 use tokio_proto::io::Framed;
 use tokio_proto::proto::pipeline;
-use tokio_core::Reactor;
-use tokio_proto::util::future::Empty;
-use futures::{Future, Map};
+use futures::{Future, Map, Empty};
+use tokio_core::Loop;
 use bytes::BlockBuf;
 use std::io;
 use std::net::SocketAddr;
@@ -50,12 +50,12 @@ impl Server {
     pub fn serve<T>(self, new_service: T)
         where T: NewService<Req = Request, Resp = Response, Error = io::Error> + Send + 'static
     {
-        let reactor = Reactor::default().unwrap();
-        let handle = reactor.handle();
+        let mut lp = Loop::new().unwrap();
+        let handle = lp.handle();
         let addr = self.addr;
         let ssl = self.ssl;
 
-        server::listen(&handle, addr, move |socket| {
+        let srv = server::listen(&handle, addr, move |socket| {
             // Create the service
             let service = try!(new_service.new_service());
             let service = HttpService { inner: service };
@@ -78,7 +78,7 @@ impl Server {
             pipeline::Server::new(service, transport)
         }).unwrap();
 
-        reactor.run().unwrap();
+        lp.run(srv).unwrap();
     }
 }
 
@@ -97,11 +97,13 @@ struct HttpService<T> {
 
 impl<T> Service for HttpService<T>
     where T: Service<Req = Request, Resp = Response, Error = io::Error>,
+          T::Fut: futures::Future
 {
     type Req = Request;
     type Resp = pipeline::Message<Response, Empty<(), io::Error>>;
     type Error = io::Error;
-    type Fut = Map<T::Fut, fn(Response) -> pipeline::Message<Response, Empty<(), io::Error>>>;
+    type Fut = Future<Item=T::Fut, Error=io::Error>;//<Map<T::Fut, fn(Response) -> pipeline::Message<Response, Empty<(), io::Error>>>>;
+    // type Fut = Future<;//<Map<T::Fut, fn(Response) -> pipeline::Message<Response, Empty<(), io::Error>>>>;
 
     fn call(&self, req: Request) -> Self::Fut {
         self.inner.call(req).map(pipeline::Message::WithoutBody)

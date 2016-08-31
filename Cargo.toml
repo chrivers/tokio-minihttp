@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Carl Lerche <me@carllerche.com>"]
 
 [dependencies]
+tokio-core = { git = "https://github.com/tokio-rs/tokio-core" }
 tokio-proto = { git = "https://github.com/tokio-rs/tokio-proto" }
 tokio-tls = { git = "https://github.com/tokio-rs/tokio-tls" }
 bytes = { git = "https://github.com/carllerche/bytes" }
